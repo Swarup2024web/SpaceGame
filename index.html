@@ -4,7 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Analyzer</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .upload-area, .results-area {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .upload-label {
+            display: block;
+            border: 2px dashed #ccc;
+            padding: 2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        .upload-label:hover {
+            border-color: #007bff;
+        }
+
+        #image-preview-container {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+        }
+
+        #image-preview {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #analyze-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        #analyze-button:hover {
+            background-color: #0056b3;
+        }
+
+        #analyze-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .results-area {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: #333;
+            color: white;
+            margin-top: auto;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+            .upload-area, .results-area {
+                width: calc(50% - 1rem);
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -37,6 +150,44 @@
         <p>&copy; 2025 Photo Analyzer. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        const imageUpload = document.getElementById('image-upload');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const analyzeButton = document.getElementById('analyze-button');
+        const resultsText = document.getElementById('results-text');
+        const uploadText = document.getElementById('upload-text');
+
+        imageUpload.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreviewContainer.style.display = 'block';
+                    analyzeButton.disabled = false;
+                    uploadText.textContent = 'Change Photo';
+                    resultsText.textContent = 'Click "Analyze Photo" to see results.';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreviewContainer.style.display = 'none';
+                imagePreview.src = '#';
+                analyzeButton.disabled = true;
+                uploadText.textContent = 'Click to Select or Drag & Drop a Photo';
+                resultsText.textContent = 'Results will appear here...';
+            }
+        });
+        
+        // This is where you would add your photo analysis logic
+        analyzeButton.addEventListener('click', function() {
+            resultsText.textContent = 'Analyzing photo...';
+            
+            // Simulating a delay for a mock analysis
+            setTimeout(() => {
+                resultsText.textContent = 'Mock analysis complete: This looks like a picture of a 🐶. It appears to be happy.';
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
