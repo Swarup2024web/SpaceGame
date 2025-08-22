@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Explorer</title>
+    <style>
+        /* General Body and Main Container Styling */
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            border: 2px solid #00ffff;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        /* Title and Header */
+        h1 {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        /* Game and Status Areas */
+        #game-area {
+            background-color: #111;
+            border: 1px solid #00ffff;
+            height: 400px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #status-display {
+            background-color: #222;
+            border: 1px solid #00ffff;
+            padding: 10px;
+            text-align: left;
+            font-size: 1.2em;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+
+        /* Call-to-action Button Styling */
+        .cta-button {
+            background-color: #00ffff;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            #game-area {
+                height: 300px;
+            }
+
+            #status-display {
+                font-size: 1em;
+            }
+
+            .cta-button {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>🌌 Space Explorer</h1>
+        <p>Your journey through the cosmos begins here.</p>
+        
+        <div id="game-area">
+            </div>
+
+        <div id="status-display">
+            > Initializing systems...<br>> Ready for launch.
+        </div>
+        
+        <button class="cta-button" onclick="startGame()">Start Journey</button>
+    </div>
+
+    <script>
+        function startGame() {
+            // This function would contain the game's logic.
+            // For example, it would update the #game-area and #status-display.
+            const statusDisplay = document.getElementById('status-display');
+            statusDisplay.innerHTML = "> Launching ship...<br>> Destination: Kepler-186f.";
+            
+            // You would add more complex logic here for movement, collision detection, etc.
+        }
+    </script>
+
+</body>
+</html>
