@@ -56,6 +56,8 @@
             font-size: 1.2em;
             margin-top: 20px;
             white-space: pre-wrap;
+            overflow-y: auto; /* Adds scrollbar for long content */
+            max-height: 250px;
         }
 
         /* Call-to-action Button Styling */
@@ -115,18 +117,68 @@
             > Initializing systems...<br>> Ready for launch.
         </div>
         
-        <button class="cta-button" onclick="startGame()">Start Journey</button>
+        <button class="cta-button" onclick="generateSystem()">Discover New System</button>
     </div>
 
     <script>
-        function startGame() {
-            // This function would contain the game's logic.
-            // For example, it would update the #game-area and #status-display.
-            const statusDisplay = document.getElementById('status-display');
-            statusDisplay.innerHTML = "> Launching ship...<br>> Destination: Kepler-186f.";
-            
-            // You would add more complex logic here for movement, collision detection, etc.
+        // Data for procedural generation
+        const STAR_TYPES = ["Main Sequence", "Red Dwarf", "Yellow Giant", "White Dwarf", "Blue Supergiant"];
+        const PLANET_TYPES = ["Terrestrial", "Gas Giant", "Ice Planet", "Lava Planet", "Desert Planet"];
+        const RESOURCE_TYPES = ["Iron", "Titanium", "Helium-3", "Water Ice", "Rare Crystals"];
+        const SYSTEM_NAMES = ["Kepler", "Sol", "Alpha Centauri", "Sirius", "Vega"];
+        
+        // Function to get a random element from an array
+        function getRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
         }
+
+        // The core function to generate a star system
+        function generateSystem() {
+            const statusDisplay = document.getElementById('status-display');
+            
+            // Step 1: Create a StarSystem object
+            const system = {};
+            system.name = getRandom(SYSTEM_NAMES) + " " + Math.floor(Math.random() * 100);
+            system.starType = getRandom(STAR_TYPES);
+            system.planets = [];
+            
+            // Step 2: Generate a random number of planets
+            const numberOfPlanets = Math.floor(Math.random() * 6) + 2; // 2 to 7 planets
+            
+            // Step 3: Loop to create each planet
+            for (let i = 0; i < numberOfPlanets; i++) {
+                const planet = {};
+                planet.name = `Planet ${i + 1}`;
+                planet.type = getRandom(PLANET_TYPES);
+                planet.resources = [];
+
+                // Add 1-3 random resources to each planet
+                const numberOfResources = Math.floor(Math.random() * 3) + 1;
+                for (let j = 0; j < numberOfResources; j++) {
+                    const resource = getRandom(RESOURCE_TYPES);
+                    if (!planet.resources.includes(resource)) {
+                        planet.resources.push(resource);
+                    }
+                }
+                
+                system.planets.push(planet);
+            }
+
+            // Step 4: Display the results in the status area
+            let output = `> **Exploring New System:** ${system.name}\n`;
+            output += `> Star Type: ${system.starType}\n`;
+            output += `> Planets discovered: ${system.planets.length}\n\n`;
+            
+            system.planets.forEach((planet, index) => {
+                output += `  - Planet ${index + 1}: ${planet.type}\n`;
+                output += `    Resources: ${planet.resources.join(', ')}\n`;
+            });
+
+            statusDisplay.innerHTML = output.replace(/\n/g, '<br>');
+        }
+
+        // Call generateSystem() on initial load to show a starting system
+        window.onload = generateSystem;
     </script>
 
 </body>
