@@ -3,183 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Explorer</title>
+    <title>AI & Robot Builder</title>
     <style>
-        /* General Body and Main Container Styling */
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #388E3C;
+            --background-color: #f0f0f0;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .game-container {
-            width: 100%;
-            max-width: 800px;
-            border: 2px solid #00ffff;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
             padding: 20px;
             text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            box-shadow: 0 0 15px #00ffff;
+            box-shadow: var(--box-shadow);
         }
 
-        /* Title and Header */
-        h1 {
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
-            font-size: 2.5em;
-            margin-bottom: 20px;
+        header h1 {
+            margin: 0;
         }
 
-        /* Game and Status Areas */
-        #game-area {
-            background-color: #111;
-            border: 1px solid #00ffff;
-            height: 400px;
-            margin: 20px auto;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #status-display {
-            background-color: #222;
-            border: 1px solid #00ffff;
-            padding: 10px;
-            text-align: left;
+        .coin-counter {
             font-size: 1.2em;
-            margin-top: 20px;
-            white-space: pre-wrap;
-            overflow-y: auto; /* Adds scrollbar for long content */
-            max-height: 250px;
-        }
-
-        /* Call-to-action Button Styling */
-        .cta-button {
-            background-color: #00ffff;
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-top: 20px;
-            border-radius: 5px;
             font-weight: bold;
+            margin-top: 10px;
         }
 
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #00ffff;
+        .container {
+            flex-grow: 1;
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 600px) {
-            .game-container {
-                padding: 10px;
-            }
+        .panel {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
 
-            h1 {
-                font-size: 1.8em;
-            }
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
 
-            #game-area {
-                height: 300px;
-            }
+        #task-panel {
+            /* Styles for the task section */
+        }
 
-            #status-display {
-                font-size: 1em;
-            }
+        #builder-panel {
+            /* Styles for the robot builder section */
+        }
 
-            .cta-button {
-                font-size: 1em;
-                padding: 10px 20px;
-            }
+        .button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <h1>🌌 Space Explorer</h1>
-        <p>Your journey through the cosmos begins here.</p>
-        
-        <div id="game-area">
-            </div>
+    <header>
+        <h1>AI & Robot Builder</h1>
+        <div class="coin-counter">Coins: <span id="coin-count">0</span></div>
+    </header>
 
-        <div id="status-display">
-            > Initializing systems...<br>> Ready for launch.
+    <div class="container">
+        <div id="task-panel" class="panel">
+            <h2>Complete Tasks</h2>
+            <p>Answer questions and solve puzzles to earn coins.</p>
+            <button id="start-task-button" class="button">Start Task</button>
+            <div id="task-content" style="margin-top: 20px;">
+                </div>
         </div>
-        
-        <button class="cta-button" onclick="generateSystem()">Discover New System</button>
+
+        <div id="builder-panel" class="panel">
+            <h2>Build Your AI or Robot</h2>
+            <p>Use your coins to buy parts and build your creations.</p>
+            <div id="robot-builder-area" style="min-height: 200px; border: 2px dashed #ccc; padding: 10px; border-radius: 5px;">
+                <p>Drag parts here to build!</p>
+                </div>
+            <div id="part-store" style="margin-top: 20px;">
+                <h3>Store</h3>
+                <div id="part-list">
+                    <div class="part-item">
+                        <span class="part-name">Motor</span> - <span class="part-cost">50 Coins</span>
+                        <button class="buy-button" data-part-id="motor">Buy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Data for procedural generation
-        const STAR_TYPES = ["Main Sequence", "Red Dwarf", "Yellow Giant", "White Dwarf", "Blue Supergiant"];
-        const PLANET_TYPES = ["Terrestrial", "Gas Giant", "Ice Planet", "Lava Planet", "Desert Planet"];
-        const RESOURCE_TYPES = ["Iron", "Titanium", "Helium-3", "Water Ice", "Rare Crystals"];
-        const SYSTEM_NAMES = ["Kepler", "Sol", "Alpha Centauri", "Sirius", "Vega"];
-        
-        // Function to get a random element from an array
-        function getRandom(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
+    <footer>
+        <p>&copy; 2025 AI & Robot Builder Game</p>
+    </footer>
 
-        // The core function to generate a star system
-        function generateSystem() {
-            const statusDisplay = document.getElementById('status-display');
-            
-            // Step 1: Create a StarSystem object
-            const system = {};
-            system.name = getRandom(SYSTEM_NAMES) + " " + Math.floor(Math.random() * 100);
-            system.starType = getRandom(STAR_TYPES);
-            system.planets = [];
-            
-            // Step 2: Generate a random number of planets
-            const numberOfPlanets = Math.floor(Math.random() * 6) + 2; // 2 to 7 planets
-            
-            // Step 3: Loop to create each planet
-            for (let i = 0; i < numberOfPlanets; i++) {
-                const planet = {};
-                planet.name = `Planet ${i + 1}`;
-                planet.type = getRandom(PLANET_TYPES);
-                planet.resources = [];
-
-                // Add 1-3 random resources to each planet
-                const numberOfResources = Math.floor(Math.random() * 3) + 1;
-                for (let j = 0; j < numberOfResources; j++) {
-                    const resource = getRandom(RESOURCE_TYPES);
-                    if (!planet.resources.includes(resource)) {
-                        planet.resources.push(resource);
-                    }
-                }
-                
-                system.planets.push(planet);
-            }
-
-            // Step 4: Display the results in the status area
-            let output = `> **Exploring New System:** ${system.name}\n`;
-            output += `> Star Type: ${system.starType}\n`;
-            output += `> Planets discovered: ${system.planets.length}\n\n`;
-            
-            system.planets.forEach((planet, index) => {
-                output += `  - Planet ${index + 1}: ${planet.type}\n`;
-                output += `    Resources: ${planet.resources.join(', ')}\n`;
-            });
-
-            statusDisplay.innerHTML = output.replace(/\n/g, '<br>');
-        }
-
-        // Call generateSystem() on initial load to show a starting system
-        window.onload = generateSystem;
-    </script>
+    <script src="script.js"></script>
 
 </body>
 </html>
