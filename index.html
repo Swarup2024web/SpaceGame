@@ -3,141 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI & Robot Builder</title>
-    <style>
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #388E3C;
-            --background-color: #f0f0f0;
-            --card-background: #ffffff;
-            --text-color: #333;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--box-shadow);
-        }
-
-        header h1 {
-            margin: 0;
-        }
-
-        .coin-counter {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .container {
-            flex-grow: 1;
-            display: flex;
-            padding: 20px;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .panel {
-            flex: 1;
-            min-width: 300px;
-            background-color: var(--card-background);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-
-        h2 {
-            color: var(--secondary-color);
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 10px;
-        }
-
-        #task-panel {
-            /* Styles for the task section */
-        }
-
-        #builder-panel {
-            /* Styles for the robot builder section */
-        }
-
-        .button {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 15px;
-            text-align: center;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .button:hover {
-            background-color: var(--secondary-color);
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #777;
-        }
-    </style>
+    <title>Photo Analyzer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
-        <h1>AI & Robot Builder</h1>
-        <div class="coin-counter">Coins: <span id="coin-count">0</span></div>
+        <h1>📸 Photo Analyzer</h1>
     </header>
 
-    <div class="container">
-        <div id="task-panel" class="panel">
-            <h2>Complete Tasks</h2>
-            <p>Answer questions and solve puzzles to earn coins.</p>
-            <button id="start-task-button" class="button">Start Task</button>
-            <div id="task-content" style="margin-top: 20px;">
-                </div>
+    <main class="container">
+        <div class="upload-area">
+            <h2>Upload an Image</h2>
+            <form id="upload-form">
+                <label for="image-upload" class="upload-label">
+                    <span id="upload-text">Click to Select or Drag & Drop a Photo</span>
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                </label>
+            </form>
+            <div id="image-preview-container">
+                <img id="image-preview" src="#" alt="Image Preview">
+            </div>
+            <button id="analyze-button" disabled>Analyze Photo</button>
         </div>
 
-        <div id="builder-panel" class="panel">
-            <h2>Build Your AI or Robot</h2>
-            <p>Use your coins to buy parts and build your creations.</p>
-            <div id="robot-builder-area" style="min-height: 200px; border: 2px dashed #ccc; padding: 10px; border-radius: 5px;">
-                <p>Drag parts here to build!</p>
-                </div>
-            <div id="part-store" style="margin-top: 20px;">
-                <h3>Store</h3>
-                <div id="part-list">
-                    <div class="part-item">
-                        <span class="part-name">Motor</span> - <span class="part-cost">50 Coins</span>
-                        <button class="buy-button" data-part-id="motor">Buy</button>
-                    </div>
-                </div>
-            </div>
+        <div class="results-area" id="results-area">
+            <h2>Analysis Results</h2>
+            <p id="results-text">Results will appear here...</p>
         </div>
-    </div>
+    </main>
 
     <footer>
-        <p>&copy; 2025 AI & Robot Builder Game</p>
+        <p>&copy; 2025 Photo Analyzer. All rights reserved.</p>
     </footer>
 
     <script src="script.js"></script>
-
 </body>
 </html>
