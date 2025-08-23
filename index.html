@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>StreetWars — Game Hub</title>
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
 <style>
   :root{
     --bg:#0f1115; --card:#171a21; --card-2:#13161c; --text:#e6e6e6; --muted:#9aa3b2;
@@ -132,6 +134,12 @@
   .right{text-align:right}
   .small{font-size:12px; color:var(--muted)}
   .sep{height:1px; background:var(--border); margin:10px 0}
+  .icon{
+    font-size: 18px;
+    vertical-align: -4px;
+    margin-right: 4px;
+    line-height: 1;
+  }
 
   /* Responsive */
   @media (min-width:720px){
@@ -146,14 +154,13 @@
 </head>
 <body>
 
-  <!-- Top bar -->
   <header class="topbar">
     <div class="toprow">
-      <div class="logo">🏙️ StreetWars</div>
+      <div class="logo"><span class="material-symbols-outlined icon">apartment</span>StreetWars</div>
       <div class="pill">
-        <span>👤 <strong id="playerName">Rookie</strong></span>
+        <span><span class="material-symbols-outlined icon">person</span><strong id="playerName">Rookie</strong></span>
         <span>•</span>
-        <span>💰 <strong id="cash">$2,450</strong></span>
+        <span><span class="material-symbols-outlined icon">payments</span><strong id="cash">$2,450</strong></span>
       </div>
     </div>
     <div class="search">
@@ -162,44 +169,40 @@
     </div>
   </header>
 
-  <!-- HUD -->
   <section class="hud">
     <div class="stat energy">
-      <h4><span>⚡ Energy</span><span class="small"><span id="energyVal">50</span>/<span id="energyMax">100</span> • +1 in <span id="energyTick">00:15</span></span></h4>
+      <h4><span><span class="material-symbols-outlined icon">bolt</span>Energy</span><span class="small"><span id="energyVal">50</span>/<span id="energyMax">100</span> • +1 in <span id="energyTick">00:15</span></span></h4>
       <div class="bar"><div id="energyFill" class="fill" style="width:50%"></div><div class="label">Energy</div></div>
     </div>
 
     <div class="stat stamina">
-      <h4><span>🥊 Stamina</span><span class="small"><span id="staminaVal">25</span>/<span id="staminaMax">50</span> • +1 in <span id="staminaTick">00:10</span></span></h4>
+      <h4><span><span class="material-symbols-outlined icon">fitness_center</span>Stamina</span><span class="small"><span id="staminaVal">25</span>/<span id="staminaMax">50</span> • +1 in <span id="staminaTick">00:10</span></span></h4>
       <div class="bar"><div id="staminaFill" class="fill" style="width:50%"></div><div class="label">Stamina</div></div>
     </div>
 
     <div class="stat health">
-      <h4><span>❤️ Health</span><span class="small"><span id="healthVal">78</span>/<span id="healthMax">100</span></span></h4>
+      <h4><span><span class="material-symbols-outlined icon">favorite</span>Health</span><span class="small"><span id="healthVal">78</span>/<span id="healthMax">100</span></span></h4>
       <div class="bar"><div id="healthFill" class="fill" style="width:78%"></div><div class="label">Health</div></div>
     </div>
 
     <div class="stat xp">
-      <h4><span>⭐ Level 3</span><span class="small">XP 120/300</span></h4>
+      <h4><span><span class="material-symbols-outlined icon">stars</span>Level 3</span><span class="small">XP 120/300</span></h4>
       <div class="bar"><div id="xpFill" class="fill" style="width:40%"></div><div class="label">XP</div></div>
     </div>
   </section>
 
-  <!-- Tabs -->
   <nav class="tabs" id="tabs">
-    <button class="tab active" data-target="missions">📜 Jobs</button>
-    <button class="tab" data-target="fight">🥊 Fight</button>
-    <button class="tab" data-target="inventory">🎒 Inventory</button>
-    <button class="tab" data-target="gangs">🧢 Gangs</button>
-    <button class="tab" data-target="market">🛒 Market</button>
-    <button class="tab" data-target="messages">💬 Messages <span class="notif" id="msgBadge">3</span></button>
-    <button class="tab" data-target="chat">📣 Chat</button>
-    <button class="tab" data-target="rank">🏆 Rank</button>
+    <button class="tab active" data-target="missions"><span class="material-symbols-outlined icon">assignment</span>Jobs</button>
+    <button class="tab" data-target="fight"><span class="material-symbols-outlined icon">sports_martial_arts</span>Fight</button>
+    <button class="tab" data-target="inventory"><span class="material-symbols-outlined icon">inventory_2</span>Inventory</button>
+    <button class="tab" data-target="gangs"><span class="material-symbols-outlined icon">groups</span>Gangs</button>
+    <button class="tab" data-target="market"><span class="material-symbols-outlined icon">storefront</span>Market</button>
+    <button class="tab" data-target="messages"><span class="material-symbols-outlined icon">mail</span>Messages <span class="notif" id="msgBadge">3</span></button>
+    <button class="tab" data-target="chat"><span class="material-symbols-outlined icon">forum</span>Chat</button>
+    <button class="tab" data-target="rank"><span class="material-symbols-outlined icon">trophy</span>Rank</button>
   </nav>
 
-  <!-- Content -->
   <main class="wrap">
-    <!-- Missions -->
     <section id="missions" class="section active">
       <div class="card">
         <div class="row">
@@ -218,7 +221,7 @@
             </div>
           </div>
           <div class="right small">
-            ⏱️ <span>~20s</span><br/>📍 Old Town
+            <span class="material-symbols-outlined icon">timer</span><span>~20s</span><br/><span class="material-symbols-outlined icon">location_on</span>Old Town
           </div>
         </div>
       </div>
@@ -240,7 +243,7 @@
             </div>
           </div>
           <div class="right small">
-            ⏱️ <span>~60s</span><br/>🚚 South Pier
+            <span class="material-symbols-outlined icon">timer</span><span>~60s</span><br/><span class="material-symbols-outlined icon">local_shipping</span>South Pier
           </div>
         </div>
       </div>
@@ -262,13 +265,12 @@
             </div>
           </div>
           <div class="right small">
-            ⏱️ <span>~2m</span><br/>♣️ Card House
+            <span class="material-symbols-outlined icon">timer</span><span>~2m</span><br/><span class="material-symbols-outlined icon">casino</span>Card House
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Fight -->
     <section id="fight" class="section">
       <div class="card">
         <h3 class="title">Nearby Rivals</h3>
@@ -285,7 +287,7 @@
               <button class="btn" onclick="toast('Scout report opened')">Scout</button>
             </div>
           </div>
-          <div class="right small">🗺️ Two Blocks Away</div>
+          <div class="right small"><span class="material-symbols-outlined icon">map</span>Two Blocks Away</div>
         </div>
         <div class="sep"></div>
         <div class="row">
@@ -300,16 +302,15 @@
               <button class="btn" onclick="toast('Marked as rival')">Mark</button>
             </div>
           </div>
-          <div class="right small">🚇 Subway Entrance</div>
+          <div class="right small"><span class="material-symbols-outlined icon">subway</span>Subway Entrance</div>
         </div>
       </div>
     </section>
 
-    <!-- Inventory -->
     <section id="inventory" class="section">
       <div class="grid2">
         <div class="card">
-          <h3 class="title">🧢 Baseball Cap</h3>
+          <h3 class="title"><span class="material-symbols-outlined icon">auto_fix</span>Baseball Cap</h3>
           <p class="sub">+2 Defense • Street style essential.</p>
           <div class="act">
             <button class="btn" onclick="toast('Equipped')">Equip</button>
@@ -317,7 +318,7 @@
           </div>
         </div>
         <div class="card">
-          <h3 class="title">🔧 Crowbar</h3>
+          <h3 class="title"><span class="material-symbols-outlined icon">handyman</span>Crowbar</h3>
           <p class="sub">Required for Docks job. +3 Attack.</p>
           <div class="act">
             <button class="btn" onclick="toast('Equipped')">Equip</button>
@@ -327,7 +328,6 @@
       </div>
     </section>
 
-    <!-- Gangs -->
     <section id="gangs" class="section">
       <div class="card">
         <h3 class="title">Crew Invites</h3>
@@ -351,7 +351,6 @@
       </div>
     </section>
 
-    <!-- Market -->
     <section id="market" class="section">
       <div class="card">
         <h3 class="title">Black Market</h3>
@@ -363,16 +362,15 @@
               <button class="btn" onclick="toast('Added to wishlist')">Wishlist</button>
             </div>
           </div>
-          <div class="small right">⏳ 14m left</div>
+          <div class="small right"><span class="material-symbols-outlined icon">schedule</span>14m left</div>
         </div>
       </div>
     </section>
 
-    <!-- Messages -->
     <section id="messages" class="section">
       <div class="card">
         <h3 class="title">Inbox</h3>
-        <div class="msg"><strong>@ShadowVex:</strong> You’re on my turf. Watch it. 😈</div>
+        <div class="msg"><strong>@ShadowVex:</strong> You’re on my turf. Watch it. <span class="material-symbols-outlined icon" style="font-size:16px; vertical-align:-3px; color:#ff6b6b">local_fire_department</span></div>
         <div class="msg me"><strong>You:</strong> Pull up then.</div>
         <div class="msg"><strong>@NeonAlley:</strong> Crew raid tonight. Be ready.</div>
         <div class="act">
@@ -382,7 +380,6 @@
       </div>
     </section>
 
-    <!-- Chat -->
     <section id="chat" class="section">
       <div class="card">
         <h3 class="title">Global Chat</h3>
@@ -397,7 +394,6 @@
       </div>
     </section>
 
-    <!-- Rank -->
     <section id="rank" class="section">
       <div class="card">
         <h3 class="title">Leaderboard</h3>
@@ -410,14 +406,13 @@
     </section>
   </main>
 
-  <!-- Bottom nav -->
   <footer class="navbar">
     <div class="navrow" id="bottomNav">
-      <button class="navbtn active" data-target="missions">Jobs</button>
-      <button class="navbtn" data-target="fight">Fight</button>
-      <button class="navbtn" data-target="market">Market</button>
-      <button class="navbtn" data-target="messages">Inbox<span class="notif" id="msgBadge2">3</span></button>
-      <button class="navbtn" data-target="chat">Chat</button>
+      <button class="navbtn active" data-target="missions"><span class="material-symbols-outlined">assignment</span>Jobs</button>
+      <button class="navbtn" data-target="fight"><span class="material-symbols-outlined">sports_martial_arts</span>Fight</button>
+      <button class="navbtn" data-target="market"><span class="material-symbols-outlined">storefront</span>Market</button>
+      <button class="navbtn" data-target="messages"><span class="material-symbols-outlined">mail</span>Inbox<span class="notif" id="msgBadge2">3</span></button>
+      <button class="navbtn" data-target="chat"><span class="material-symbols-outlined">forum</span>Chat</button>
     </div>
   </footer>
 
@@ -553,4 +548,4 @@
 </script>
 
 </body>
-    </html>
+</html>
