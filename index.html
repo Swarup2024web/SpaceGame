@@ -1,193 +1,556 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Analyzer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f7f9;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>StreetWars — Game Hub</title>
 
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card-2:#13161c; --text:#e6e6e6; --muted:#9aa3b2;
+    --accent:#66e0a3; --accent-2:#68a0ff; --danger:#ff6b6b; --gold:#ffcf5c;
+    --border:#262b36; --shadow:0 6px 20px rgba(0,0,0,.35);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:linear-gradient(180deg,#0d1014,#0f1115 30%);
+    color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+    line-height:1.25; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
 
-        .container {
-            flex: 1;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 2rem;
-            gap: 2rem;
-        }
+  /* Top bar */
+  .topbar{
+    position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.2) blur(10px);
+    background:rgba(15,17,21,.7); border-bottom:1px solid var(--border);
+  }
+  .toprow{
+    display:flex; align-items:center; gap:10px; padding:12px 14px;
+  }
+  .logo{font-weight:800; letter-spacing:.5px; font-size:18px}
+  .pill{
+    margin-left:auto; display:flex; align-items:center; gap:8px; padding:8px 11px;
+    background:var(--card); border:1px solid var(--border); border-radius:999px; box-shadow:var(--shadow);
+    font-size:12px; color:var(--muted);
+  }
+  .search{
+    display:flex; gap:8px; padding:10px 12px; border-top:1px solid var(--border);
+    background:rgba(19,22,28,.8);
+  }
+  .search input{
+    flex:1; appearance:none; outline:none; border:1px solid var(--border); background:var(--card-2);
+    color:var(--text); padding:10px 12px; border-radius:12px; font-size:14px;
+  }
+  .search button{
+    border:1px solid var(--border); background:var(--card); color:var(--text);
+    padding:10px 12px; border-radius:12px; font-weight:600; cursor:pointer;
+  }
 
-        .upload-area, .results-area {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-        }
+  /* HUD */
+  .hud{padding:12px 14px; display:grid; gap:12px; grid-template-columns:1fr; border-bottom:1px solid var(--border)}
+  .stat{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:12px; box-shadow:var(--shadow)
+  }
+  .stat h4{margin:0 0 10px 0; font-size:13px; color:var(--muted); display:flex; justify-content:space-between}
+  .bar{
+    position:relative; height:12px; background:#0b0e13; border:1px solid var(--border); border-radius:999px; overflow:hidden;
+  }
+  .fill{height:100%; width:50%; border-right:1px solid rgba(255,255,255,.15)}
+  .energy .fill{background:linear-gradient(90deg,#3ee884,#23c876)}
+  .stamina .fill{background:linear-gradient(90deg,#7bb0ff,#5a8cff)}
+  .health .fill{background:linear-gradient(90deg,#ff9671,#ff6b6b)}
+  .xp .fill{background:linear-gradient(90deg,#ffd36e,#ffb347)}
+  .bar .label{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:#0b0e13; font-weight:800; mix-blend-mode:screen; text-shadow:0 1px 0 rgba(0,0,0,.4)
+  }
 
-        .upload-label {
-            display: block;
-            border: 2px dashed #ccc;
-            padding: 2rem;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: border-color 0.3s ease;
-        }
+  /* Tabs */
+  .tabs{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:12px 14px; border-bottom:1px solid var(--border);
+    background:rgba(19,22,28,.5)
+  }
+  .tab{
+    text-align:center; padding:10px 8px; font-size:12px; border:1px solid var(--border); background:var(--card);
+    border-radius:12px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis
+  }
+  .tab.active{outline:2px solid var(--accent); color:#0d1217; background:linear-gradient(180deg,#6ef0b4,#53dda0)}
 
-        .upload-label:hover {
-            border-color: #007bff;
-        }
+  /* Content sections */
+  .wrap{padding:12px 14px 90px}
+  .section{display:none}
+  .section.active{display:block}
 
-        #image-preview-container {
-            margin-top: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            overflow: hidden;
-            display: none;
-        }
+  /* Cards / lists */
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:12px; box-shadow:var(--shadow)
+  }
+  .row{display:flex; align-items:center; gap:12px}
+  .row .grow{flex:1}
+  .title{font-size:15px; font-weight:700; margin:0 0 6px}
+  .sub{font-size:12px; color:var(--muted); margin:0}
+  .meta{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--muted)}
+  .badge{padding:2px 8px; border:1px solid var(--border); border-radius:999px; background:var(--card-2)}
+  .act{
+    display:flex; gap:8px; margin-top:10px; flex-wrap:wrap
+  }
+  .btn{
+    appearance:none; border:1px solid var(--border); background:var(--card-2); color:var(--text);
+    padding:10px 12px; border-radius:12px; font-weight:700; cursor:pointer; font-size:13px
+  }
+  .btn.primary{background:linear-gradient(180deg,#71f0b4,#4fd89d); color:#0d1217}
+  .btn.blue{background:linear-gradient(180deg,#8cc0ff,#6ea9ff); color:#0d1217}
+  .btn.red{background:linear-gradient(180deg,#ffa0a0,#ff7b7b); color:#0d1217}
+  .btn.gold{background:linear-gradient(180deg,#ffe08a,#ffcf5c); color:#0d1217}
 
-        #image-preview {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
+  /* Chat */
+  .chat{
+    max-height:45vh; overflow:auto; padding:6px; border:1px dashed var(--border); border-radius:12px; background:rgba(0,0,0,.25)
+  }
+  .msg{padding:8px 10px; margin:6px 0; background:var(--card-2); border:1px solid var(--border); border-radius:12px}
+  .me{background:linear-gradient(180deg,#1b222e,#171e29)}
+  .chatform{display:flex; gap:8px; margin-top:10px}
+  .chatform input{flex:1; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--card-2); color:var(--text)}
+  .chatform button{padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--card); color:var(--text); font-weight:700}
 
-        #analyze-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
+  /* Bottom nav */
+  .navbar{
+    position:fixed; bottom:0; left:0; right:0; z-index:40; background:rgba(15,17,21,.9); backdrop-filter:blur(10px);
+    border-top:1px solid var(--border)
+  }
+  .navrow{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:10px 12px}
+  .navbtn{
+    text-align:center; padding:8px 6px; font-size:11px; color:var(--muted);
+    border:1px solid var(--border); background:var(--card); border-radius:12px; cursor:pointer
+  }
+  .navbtn.active{outline:2px solid var(--accent-2); color:#0d1217; background:linear-gradient(180deg,#8ebdff,#6aa5ff)}
+  .notif{display:inline-block; min-width:18px; padding:2px 6px; border-radius:999px; font-weight:800; font-size:10px; background:var(--danger); color:white; margin-left:6px}
 
-        #analyze-button:hover {
-            background-color: #0056b3;
-        }
+  /* Utilities */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .right{text-align:right}
+  .small{font-size:12px; color:var(--muted)}
+  .sep{height:1px; background:var(--border); margin:10px 0}
 
-        #analyze-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+  /* Responsive */
+  @media (min-width:720px){
+    .hud{grid-template-columns:repeat(2,1fr)}
+    .tabs{grid-template-columns:repeat(8,1fr)}
+    .wrap{max-width:920px; margin:0 auto}
+  }
 
-        .results-area {
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        footer {
-            text-align: center;
-            padding: 1rem 0;
-            background-color: #333;
-            color: white;
-            margin-top: auto;
-        }
-
-        @media (min-width: 768px) {
-            .container {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-            .upload-area, .results-area {
-                width: calc(50% - 1rem);
-            }
-        }
-    </style>
+  /* Tap feedback */
+  .btn:active,.tab:active,.navbtn:active{transform:translateY(1px); filter:brightness(.98)}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>📸 Photo Analyzer</h1>
-    </header>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="toprow">
+      <div class="logo">🏙️ StreetWars</div>
+      <div class="pill">
+        <span>👤 <strong id="playerName">Rookie</strong></span>
+        <span>•</span>
+        <span>💰 <strong id="cash">$2,450</strong></span>
+      </div>
+    </div>
+    <div class="search">
+      <input id="search" placeholder="Search players, items, gangs…" />
+      <button onclick="toast('Searching…')">Search</button>
+    </div>
+  </header>
 
-    <main class="container">
-        <div class="upload-area">
-            <h2>Upload an Image</h2>
-            <form id="upload-form">
-                <label for="image-upload" class="upload-label">
-                    <span id="upload-text">Click to Select or Drag & Drop a Photo</span>
-                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
-                </label>
-            </form>
-            <div id="image-preview-container">
-                <img id="image-preview" src="#" alt="Image Preview">
+  <!-- HUD -->
+  <section class="hud">
+    <div class="stat energy">
+      <h4><span>⚡ Energy</span><span class="small"><span id="energyVal">50</span>/<span id="energyMax">100</span> • +1 in <span id="energyTick">00:15</span></span></h4>
+      <div class="bar"><div id="energyFill" class="fill" style="width:50%"></div><div class="label">Energy</div></div>
+    </div>
+
+    <div class="stat stamina">
+      <h4><span>🥊 Stamina</span><span class="small"><span id="staminaVal">25</span>/<span id="staminaMax">50</span> • +1 in <span id="staminaTick">00:10</span></span></h4>
+      <div class="bar"><div id="staminaFill" class="fill" style="width:50%"></div><div class="label">Stamina</div></div>
+    </div>
+
+    <div class="stat health">
+      <h4><span>❤️ Health</span><span class="small"><span id="healthVal">78</span>/<span id="healthMax">100</span></span></h4>
+      <div class="bar"><div id="healthFill" class="fill" style="width:78%"></div><div class="label">Health</div></div>
+    </div>
+
+    <div class="stat xp">
+      <h4><span>⭐ Level 3</span><span class="small">XP 120/300</span></h4>
+      <div class="bar"><div id="xpFill" class="fill" style="width:40%"></div><div class="label">XP</div></div>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-target="missions">📜 Jobs</button>
+    <button class="tab" data-target="fight">🥊 Fight</button>
+    <button class="tab" data-target="inventory">🎒 Inventory</button>
+    <button class="tab" data-target="gangs">🧢 Gangs</button>
+    <button class="tab" data-target="market">🛒 Market</button>
+    <button class="tab" data-target="messages">💬 Messages <span class="notif" id="msgBadge">3</span></button>
+    <button class="tab" data-target="chat">📣 Chat</button>
+    <button class="tab" data-target="rank">🏆 Rank</button>
+  </nav>
+
+  <!-- Content -->
+  <main class="wrap">
+    <!-- Missions -->
+    <section id="missions" class="section active">
+      <div class="card">
+        <div class="row">
+          <div class="grow">
+            <h3 class="title">Steal a Scooter</h3>
+            <p class="sub">Quick hit-and-run to earn some cash.</p>
+            <div class="meta">
+              <span class="badge">Energy: 5</span>
+              <span class="badge">Reward: $120–$240</span>
+              <span class="badge">XP: +8</span>
+              <span class="badge">Risk: Low</span>
             </div>
-            <button id="analyze-button" disabled>Analyze Photo</button>
+            <div class="act">
+              <button class="btn primary" onclick="doJob(5, 8, 180)">Do Job</button>
+              <button class="btn" onclick="toast('Details opened')">Details</button>
+            </div>
+          </div>
+          <div class="right small">
+            ⏱️ <span>~20s</span><br/>📍 Old Town
+          </div>
         </div>
+      </div>
 
-        <div class="results-area" id="results-area">
-            <h2>Analysis Results</h2>
-            <p id="results-text">Results will appear here...</p>
+      <div class="card">
+        <div class="row">
+          <div class="grow">
+            <h3 class="title">Shakedown the Docks</h3>
+            <p class="sub">Collect “fees” from the night shift.</p>
+            <div class="meta">
+              <span class="badge">Energy: 12</span>
+              <span class="badge">Reward: $400–$650</span>
+              <span class="badge">XP: +20</span>
+              <span class="badge">Risk: Medium</span>
+            </div>
+            <div class="act">
+              <button class="btn primary" onclick="doJob(12, 20, 520)">Do Job</button>
+              <button class="btn" onclick="toast('You need a crowbar!')">Required Item</button>
+            </div>
+          </div>
+          <div class="right small">
+            ⏱️ <span>~60s</span><br/>🚚 South Pier
+          </div>
         </div>
-    </main>
+      </div>
 
-    <footer>
-        <p>&copy; 2025 Photo Analyzer. All rights reserved.</p>
-    </footer>
+      <div class="card">
+        <div class="row">
+          <div class="grow">
+            <h3 class="title">Backroom Poker Heist</h3>
+            <p class="sub">Walk in cool, walk out richer.</p>
+            <div class="meta">
+              <span class="badge">Energy: 20</span>
+              <span class="badge">Reward: $900–$1,500</span>
+              <span class="badge">XP: +45</span>
+              <span class="badge">Risk: High</span>
+            </div>
+            <div class="act">
+              <button class="btn red" onclick="doJob(20, 45, 1200)">Attempt Heist</button>
+              <button class="btn" onclick="toast('Intel Purchased')">Buy Intel ($150)</button>
+            </div>
+          </div>
+          <div class="right small">
+            ⏱️ <span>~2m</span><br/>♣️ Card House
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script>
-        const imageUpload = document.getElementById('image-upload');
-        const imagePreviewContainer = document.getElementById('image-preview-container');
-        const imagePreview = document.getElementById('image-preview');
-        const analyzeButton = document.getElementById('analyze-button');
-        const resultsText = document.getElementById('results-text');
-        const uploadText = document.getElementById('upload-text');
+    <!-- Fight -->
+    <section id="fight" class="section">
+      <div class="card">
+        <h3 class="title">Nearby Rivals</h3>
+        <div class="sep"></div>
+        <div class="row">
+          <div class="grow">
+            <p class="sub"><strong>@ShadowVex</strong> • Lvl 4 • Winrate 62%</p>
+            <div class="meta">
+              <span class="badge">Bounty: $250</span>
+              <span class="badge">Stamina: 4</span>
+            </div>
+            <div class="act">
+              <button class="btn blue" onclick="fight('ShadowVex',4)">Attack</button>
+              <button class="btn" onclick="toast('Scout report opened')">Scout</button>
+            </div>
+          </div>
+          <div class="right small">🗺️ Two Blocks Away</div>
+        </div>
+        <div class="sep"></div>
+        <div class="row">
+          <div class="grow">
+            <p class="sub"><strong>@RustRat</strong> • Lvl 6 • Winrate 54%</p>
+            <div class="meta">
+              <span class="badge">Bounty: $420</span>
+              <span class="badge">Stamina: 6</span>
+            </div>
+            <div class="act">
+              <button class="btn blue" onclick="fight('RustRat',6)">Attack</button>
+              <button class="btn" onclick="toast('Marked as rival')">Mark</button>
+            </div>
+          </div>
+          <div class="right small">🚇 Subway Entrance</div>
+        </div>
+      </div>
+    </section>
 
-        imageUpload.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreviewContainer.style.display = 'block';
-                    analyzeButton.disabled = false;
-                    uploadText.textContent = 'Change Photo';
-                    resultsText.textContent = 'Click "Analyze Photo" to see results.';
-                }
-                reader.readAsDataURL(file);
-            } else {
-                imagePreviewContainer.style.display = 'none';
-                imagePreview.src = '#';
-                analyzeButton.disabled = true;
-                uploadText.textContent = 'Click to Select or Drag & Drop a Photo';
-                resultsText.textContent = 'Results will appear here...';
-            }
-        });
-        
-        // This is where you would add your photo analysis logic
-        analyzeButton.addEventListener('click', function() {
-            resultsText.textContent = 'Analyzing photo...';
-            
-            // Simulating a delay for a mock analysis
-            setTimeout(() => {
-                resultsText.textContent = 'Mock analysis complete: This looks like a picture of a 🐶. It appears to be happy.';
-            }, 2000);
-        });
-    </script>
+    <!-- Inventory -->
+    <section id="inventory" class="section">
+      <div class="grid2">
+        <div class="card">
+          <h3 class="title">🧢 Baseball Cap</h3>
+          <p class="sub">+2 Defense • Street style essential.</p>
+          <div class="act">
+            <button class="btn" onclick="toast('Equipped')">Equip</button>
+            <button class="btn gold" onclick="toast('Upgraded to +1')">Upgrade</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="title">🔧 Crowbar</h3>
+          <p class="sub">Required for Docks job. +3 Attack.</p>
+          <div class="act">
+            <button class="btn" onclick="toast('Equipped')">Equip</button>
+            <button class="btn gold" onclick="toast('Refined steel applied')">Mod</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gangs -->
+    <section id="gangs" class="section">
+      <div class="card">
+        <h3 class="title">Crew Invites</h3>
+        <p class="sub">Pick wisely — your rep’s on the line.</p>
+        <div class="sep"></div>
+        <div class="row">
+          <div class="grow">
+            <strong>Neon Alley</strong> • 12 members
+            <div class="meta"><span class="badge">Req: Lvl 3+</span><span class="badge">Boost: +3% loot</span></div>
+          </div>
+          <div><button class="btn primary" onclick="toast('Applied to Neon Alley')">Apply</button></div>
+        </div>
+        <div class="sep"></div>
+        <div class="row">
+          <div class="grow">
+            <strong>Dock Dogs</strong> • 8 members
+            <div class="meta"><span class="badge">Req: Lvl 2+</span><span class="badge">Boost: +2 ATK</span></div>
+          </div>
+          <div><button class="btn" onclick="toast('Joined Dock Dogs')">Join</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Market -->
+    <section id="market" class="section">
+      <div class="card">
+        <h3 class="title">Black Market</h3>
+        <div class="row">
+          <div class="grow">
+            <p class="sub">Flash Deal: Lockpick Kit — <strong>$300</strong></p>
+            <div class="act">
+              <button class="btn primary" onclick="buy('Lockpick Kit',300)">Buy</button>
+              <button class="btn" onclick="toast('Added to wishlist')">Wishlist</button>
+            </div>
+          </div>
+          <div class="small right">⏳ 14m left</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Messages -->
+    <section id="messages" class="section">
+      <div class="card">
+        <h3 class="title">Inbox</h3>
+        <div class="msg"><strong>@ShadowVex:</strong> You’re on my turf. Watch it. 😈</div>
+        <div class="msg me"><strong>You:</strong> Pull up then.</div>
+        <div class="msg"><strong>@NeonAlley:</strong> Crew raid tonight. Be ready.</div>
+        <div class="act">
+          <button class="btn" onclick="toast('All marked read'); document.getElementById('msgBadge').style.display='none'">Mark all read</button>
+          <button class="btn red" onclick="toast('Messages cleared')">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chat -->
+    <section id="chat" class="section">
+      <div class="card">
+        <h3 class="title">Global Chat</h3>
+        <div id="chatBox" class="chat" aria-live="polite">
+          <div class="msg"><strong>@Mod:</strong> Be cool. No spam.</div>
+          <div class="msg"><strong>@Skyline:</strong> Anyone farming docks?</div>
+        </div>
+        <form class="chatform" onsubmit="sendChat(event)">
+          <input id="chatInput" placeholder="Say something…" />
+          <button>Send</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Rank -->
+    <section id="rank" class="section">
+      <div class="card">
+        <h3 class="title">Leaderboard</h3>
+        <div class="sep"></div>
+        <div class="row"><div class="grow"><strong>1. @Kingpin</strong></div><div class="small right">Lvl 28 • $1.2M</div></div>
+        <div class="row"><div class="grow"><strong>2. @ZeroDay</strong></div><div class="small right">Lvl 24 • $870k</div></div>
+        <div class="row"><div class="grow"><strong>3. @Neon</strong></div><div class="small right">Lvl 21 • $640k</div></div>
+        <div class="row"><div class="grow">You</div><div class="small right">Lvl 3 • $2.4k</div></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom nav -->
+  <footer class="navbar">
+    <div class="navrow" id="bottomNav">
+      <button class="navbtn active" data-target="missions">Jobs</button>
+      <button class="navbtn" data-target="fight">Fight</button>
+      <button class="navbtn" data-target="market">Market</button>
+      <button class="navbtn" data-target="messages">Inbox<span class="notif" id="msgBadge2">3</span></button>
+      <button class="navbtn" data-target="chat">Chat</button>
+    </div>
+  </footer>
+
+<script>
+  // Simple store
+  const state = {
+    energy: 50, energyMax: 100, energyTick: 15, // seconds per +1
+    stamina: 25, staminaMax: 50, staminaTick: 10,
+    health: 78, healthMax: 100,
+    xp: 120, xpMax: 300,
+    cash: 2450
+  };
+
+  // DOM helpers
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => document.querySelectorAll(sel);
+
+  function formatMoney(n){ return '$' + n.toLocaleString(); }
+
+  function renderHUD(){
+    $('#energyVal').textContent = state.energy;
+    $('#energyMax').textContent = state.energyMax;
+    $('#staminaVal').textContent = state.stamina;
+    $('#staminaMax').textContent = state.staminaMax;
+    $('#healthVal').textContent = state.health;
+    $('#healthMax').textContent = state.healthMax;
+    $('#cash').textContent = formatMoney(state.cash);
+    $('#xpFill').style.width = (state.xp/state.xpMax*100).toFixed(1) + '%';
+    $('#energyFill').style.width = (state.energy/state.energyMax*100).toFixed(1) + '%';
+    $('#staminaFill').style.width = (state.stamina/state.staminaMax*100).toFixed(1) + '%';
+    $('#healthFill').style.width = (state.health/state.healthMax*100).toFixed(1) + '%';
+  }
+
+  // Timers for regen
+  let e = state.energyTick, s = state.staminaTick;
+  function tick(){
+    // Energy
+    e--; if(e<=0){ e = state.energyTick; if(state.energy < state.energyMax){ state.energy++; } }
+    // Stamina
+    s--; if(s<=0){ s = state.staminaTick; if(state.stamina < state.staminaMax){ state.stamina++; } }
+    $('#energyTick').textContent = '00:' + String(e).padStart(2,'0');
+    $('#staminaTick').textContent = '00:' + String(s).padStart(2,'0');
+    renderHUD();
+  }
+  setInterval(tick,1000);
+
+  // Tab switching (top tabs + bottom nav)
+  function activate(target){
+    $$('.section').forEach(sec=>sec.classList.toggle('active', sec.id===target));
+    $$('.tab').forEach(t=>t.classList.toggle('active', t.dataset.target===target));
+    $$('.navbtn').forEach(n=>n.classList.toggle('active', n.dataset.target===target));
+    // sync badges between messages tabs
+    const hasMsgs = $('#msgBadge').style.display !== 'none';
+    $('#msgBadge2').style.display = hasMsgs ? 'inline-block' : 'none';
+    // scroll to top of content for better mobile UX
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  $('#tabs').addEventListener('click', e=>{
+    const t = e.target.closest('.tab'); if(!t) return;
+    activate(t.dataset.target);
+  });
+  $('#bottomNav').addEventListener('click', e=>{
+    const t = e.target.closest('.navbtn'); if(!t) return;
+    activate(t.dataset.target);
+  });
+
+  // Toast
+  function toast(msg){
+    const el = document.createElement('div');
+    el.textContent = msg;
+    el.setAttribute('style',
+      'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:#171a21;color:#fff;padding:10px 12px;border:1px solid #262b36;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:60;font-weight:700;');
+    document.body.appendChild(el);
+    setTimeout(()=>{ el.remove(); }, 1200);
+  }
+
+  // Jobs logic
+  function doJob(energyCost, xpGain, cashGain){
+    if(state.energy < energyCost){ toast('Not enough energy'); return; }
+    state.energy -= energyCost;
+    state.xp = Math.min(state.xp + xpGain, state.xpMax);
+    state.cash += Math.floor(Math.random()*cashGain*0.2) + cashGain; // little variance
+    // Level up check
+    if(state.xp >= state.xpMax){
+      state.xp = state.xp - state.xpMax;
+      state.xpMax = Math.floor(state.xpMax * 1.2);
+      toast('Level up! Stats increased');
+      state.health = Math.min(state.health + 10, state.healthMax);
+    } else {
+      toast('Job complete! Earned cash & XP');
+    }
+    renderHUD();
+  }
+
+  // Fight logic
+  function fight(name, staminaCost){
+    if(state.stamina < staminaCost){ toast('Not enough stamina'); return; }
+    state.stamina -= staminaCost;
+    const win = Math.random() > .35;
+    if(win){
+      const reward = 150 + Math.floor(Math.random()*250);
+      state.cash += reward;
+      toast('You beat @'+name+' and looted '+formatMoney(reward));
+    } else {
+      state.health = Math.max(0, state.health - (10+Math.floor(Math.random()*15)));
+      toast('@'+name+' beat you. Heal up!');
+    }
+    renderHUD();
+  }
+
+  // Market buy
+  function buy(item, price){
+    if(state.cash < price){ toast('Not enough cash'); return; }
+    state.cash -= price; toast('Purchased '+item+' for '+formatMoney(price));
+    renderHUD();
+  }
+
+  // Chat
+  function sendChat(e){
+    e.preventDefault();
+    const input = $('#chatInput');
+    const text = input.value.trim(); if(!text) return;
+    const div = document.createElement('div');
+    div.className = 'msg me';
+    div.innerHTML = '<strong>You:</strong> '+text;
+    $('#chatBox').appendChild(div);
+    input.value = '';
+    $('#chatBox').scrollTop = $('#chatBox').scrollHeight;
+  }
+
+  // Initialize
+  renderHUD();
+</script>
+
 </body>
-</html>
+    </html>
